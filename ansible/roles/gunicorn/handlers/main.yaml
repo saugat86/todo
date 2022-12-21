@@ -1,0 +1,2 @@
+- name: start gunicorn socket and service
+  script: gunicorn.sh 

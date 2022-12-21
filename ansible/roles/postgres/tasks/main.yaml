@@ -1,0 +1,10 @@
+- name: Copy database credentials
+  copy:
+    src: .env
+    dest: "{{ project_path }}/.env"
+    owner: root
+    group: root 
+    mode: 0644
+
+- name: Creating the PostgreSQL Database and User
+  script: database.sh

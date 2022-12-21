@@ -1,0 +1,9 @@
+---
+- hosts: linode
+  become: true
+  roles:
+    - base
+    - postgres
+    - django
+    - gunicorn
+    - nginx

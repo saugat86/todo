@@ -1,0 +1,35 @@
+---
+- hosts: linode
+  become: true
+  vars_files:
+    - vars/main.yaml
+
+  tasks:
+  - name: Git checkout
+    ansible.builtin.git:
+      repo: "{{ repo_url }}/{{ repo_name }}.git"
+      dest: "{{ repo_dir }}"
+      update: true
+
+  - name: Copy database credentials
+    copy:
+      src: .env
+      dest: "{{ project_path }}/.env"
+      owner: root
+      group: root 
+      mode: 0644
+
+  - name: Makemigrations
+    shell: 
+      chdir: "{{ project_path }}"
+      cmd: "{{ python_path }} manage.py makemigrations --noinput"
+      executable: /bin/bash
+
+  - name: Migrate
+    shell: 
+      chdir: "{{ project_path }}"
+      cmd: "{{ python_path }} manage.py migrate --noinput"
+      executable: /bin/bash
+
+  - name: Restart Gunicorn Service 
+    command: systemctl restart gunicorn

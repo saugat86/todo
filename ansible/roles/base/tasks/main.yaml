@@ -1,0 +1,7 @@
+- name: Change hostname
+  command: hostnamectl set-hostname automation-world
+
+- name: Git checkout
+  ansible.builtin.git:
+    repo: "{{ repo_url }}/{{ repo_name }}.git"
+    dest: "{{ repo_dir }}"

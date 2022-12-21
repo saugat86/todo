@@ -1,0 +1,11 @@
+- name: Configure Nginx to Proxy Pass to Gunicorn
+  template:
+    src: todolist.j2
+    dest: /etc/nginx/sites-available/todolist
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable nginx config 
+  shell: ln -s /etc/nginx/sites-available/todolist /etc/nginx/sites-enabled
+  notify: restart nginx service

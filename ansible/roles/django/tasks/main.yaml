@@ -1,0 +1,34 @@
+- name: Create python virtual environment
+  shell: virtualenv "{{ virtualenv_dir }}"
+
+- name: install python requirements
+  pip: 
+    requirements: "{{ project_path }}/requirements.txt"
+    virtualenv: "{{ virtualenv_dir }}"
+
+- name: Makemigrations
+  shell: 
+    chdir: "{{ project_path }}"
+    cmd: "{{ python_path }} manage.py makemigrations --noinput"
+    executable: /bin/bash
+
+- name: Migrate
+  shell: 
+    chdir: "{{ project_path }}"
+    cmd: "{{ python_path }} manage.py migrate --noinput"
+    executable: /bin/bash
+
+- name: Create SuperUser
+  script: 
+    chdir: "{{ project_path }}"
+    cmd: create_superuser.sh "{{ python_path }}"
+    executable: /bin/bash
+
+- name: Create static directory for nginx
+  shell: mkdir /var/www/todolist && chown $USER:$USER -R /var/www/todolist
+
+- name: CollectStatic
+  shell: 
+    chdir: "{{ project_path }}"
+    cmd: "{{ python_path }} manage.py collectstatic --noinput"
+    executable: /bin/bash
